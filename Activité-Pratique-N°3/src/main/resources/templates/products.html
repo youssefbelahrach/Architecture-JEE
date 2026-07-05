@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template1}">
+<head>
+    <title>Liste des produits</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3><i class="bi bi-box-seam"></i> Liste des produits</h3>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/newProduct}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Ajouter
+        </a>
+    </div>
+
+    <!-- Barre de recherche -->
+    <form th:action="@{/user/index}" method="get" class="row g-2 mb-3">
+        <div class="col-auto flex-grow-1">
+            <input type="text" name="keyword" th:value="${keyword}"
+                   class="form-control" placeholder="Rechercher un produit par nom...">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Rechercher
+            </button>
+        </div>
+        <div class="col-auto">
+            <a th:href="@{/user/index}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+            </a>
+        </div>
+    </form>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prix (DH)</th>
+                    <th>Quantité</th>
+                    <th class="text-center" sec:authorize="hasRole('ADMIN')">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${productList}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${#numbers.formatDecimal(product.price, 1, 2)}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${product.quantity < 20} ? 'bg-danger' : 'bg-success'"
+                              th:text="${product.quantity}"></span>
+                    </td>
+                    <td class="text-center" sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin/editProduct(id=${product.id}, keyword=${keyword}, page=${currentPage})}"
+                           class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil-square"></i> Éditer
+                        </a>
+                        <a th:href="@{/admin/delete(id=${product.id}, keyword=${keyword}, page=${currentPage})}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Voulez-vous vraiment supprimer ce produit ?')">
+                            <i class="bi bi-trash"></i> Supprimer
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${productList.isEmpty()}">
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i> Aucun produit trouvé
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="mt-3" th:if="${pages.length > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:each="page, status : ${pages}"
+                th:classappend="${status.index == currentPage} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/user/index(page=${status.index}, keyword=${keyword})}"
+                   th:text="${status.index + 1}"></a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+</body>
+</html>

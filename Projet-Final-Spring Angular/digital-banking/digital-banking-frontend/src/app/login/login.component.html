@@ -1,0 +1,31 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-header text-center"><h5 class="mb-0">Connexion</h5></div>
+      <div class="card-body">
+        <form [formGroup]="loginFormGroup" (ngSubmit)="handleLogin()">
+
+          <div class="mb-3">
+            <label class="form-label">Nom d'utilisateur</label>
+            <input type="text" formControlName="username" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input type="password" formControlName="password" class="form-control">
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+          <button type="submit" class="btn btn-primary w-100" [disabled]="loginFormGroup.invalid">
+            Se connecter
+          </button>
+        </form>
+        <small class="text-muted d-block mt-3">
+          Comptes de test : <strong>user1 / 12345</strong> (USER),
+          <strong>admin / 12345</strong> (ADMIN).
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Clients</h5>
+    <a routerLink="/new-customer" class="btn btn-sm btn-success">+ Nouveau client</a>
+  </div>
+  <div class="card-body">
+
+    <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()" class="mb-3">
+      <div class="input-group">
+        <input type="text" formControlName="keyword" class="form-control" placeholder="Rechercher par nom...">
+        <button class="btn btn-primary" type="submit">Rechercher</button>
+      </div>
+    </form>
+
+    <ng-container *ngIf="customers | async as listCustomers; else failureOrLoading">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr><th>ID</th><th>Nom</th><th>Email</th><th class="text-end">Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of listCustomers">
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td class="text-end">
+              <button (click)="handleCustomerAccounts(customer)" class="btn btn-sm btn-info me-2">Comptes</button>
+              <button (click)="handleDeleteCustomer(customer)" class="btn btn-sm btn-danger">Supprimer</button>
+            </td>
+          </tr>
+          <tr *ngIf="listCustomers.length === 0">
+            <td colspan="4" class="text-center text-muted">Aucun client trouvé.</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <ng-template #failureOrLoading>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="!errorMessage" class="text-muted">Chargement...</div>
+    </ng-template>
+
+  </div>
+</div>

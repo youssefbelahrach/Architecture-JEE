@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="card-header"><h5 class="mb-0">Nouveau client</h5></div>
+  <div class="card-body">
+    <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleSaveCustomer()">
+
+      <div class="mb-3">
+        <label class="form-label">Nom</label>
+        <input type="text" formControlName="name" class="form-control">
+        <ng-container *ngIf="newCustomerFormGroup.controls['name'].touched">
+          <small class="text-danger" *ngIf="newCustomerFormGroup.controls['name'].errors?.['required']">
+            Le nom est obligatoire.
+          </small>
+          <small class="text-danger" *ngIf="newCustomerFormGroup.controls['name'].errors?.['minlength']">
+            Au moins 3 caractères.
+          </small>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" formControlName="email" class="form-control">
+        <ng-container *ngIf="newCustomerFormGroup.controls['email'].touched">
+          <small class="text-danger" *ngIf="newCustomerFormGroup.controls['email'].errors?.['required']">
+            L'email est obligatoire.
+          </small>
+          <small class="text-danger" *ngIf="newCustomerFormGroup.controls['email'].errors?.['email']">
+            Format d'email invalide.
+          </small>
+        </ng-container>
+      </div>
+
+      <button type="submit" class="btn btn-success" [disabled]="newCustomerFormGroup.invalid">
+        Enregistrer
+      </button>
+    </form>
+  </div>
+</div>

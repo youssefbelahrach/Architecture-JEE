@@ -1,0 +1,102 @@
+<div class="row">
+
+  <!-- Colonne gauche : recherche + historique -->
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-header"><h5 class="mb-0">Consulter un compte</h5></div>
+      <div class="card-body">
+        <form [formGroup]="accountFormGroup" (ngSubmit)="handleSearchAccount()">
+          <div class="input-group">
+            <input type="text" formControlName="accountId" class="form-control" placeholder="ID du compte">
+            <button class="btn btn-primary" type="submit">Consulter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <ng-container *ngIf="accountObservable | async as accountHistory">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between">
+          <span>Compte : <strong>{{ accountHistory.accountId }}</strong></span>
+          <span>Solde : <strong>{{ accountHistory.balance | number:'1.2-2' }} MAD</strong></span>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr><th>ID</th><th>Date</th><th>Type</th><th>Montant</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let op of accountHistory.accountOperationDTOS">
+                <td>{{ op.id }}</td>
+                <td>{{ op.operationDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <span class="badge"
+                        [ngClass]="op.type === 'DEBIT' ? 'bg-danger' : 'bg-success'">
+                    {{ op.type }}
+                  </span>
+                </td>
+                <td>{{ op.amount | number:'1.2-2' }}</td>
+                <td>{{ op.description }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <ul class="pagination">
+            <li class="page-item"
+                *ngFor="let item of [].constructor(accountHistory.totalPages); let page = index"
+                [ngClass]="page === currentPage ? 'active' : ''">
+              <a class="page-link" (click)="gotoPage(page)" style="cursor:pointer">{{ page + 1 }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+  </div>
+
+  <!-- Colonne droite : opérations -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Opérations</h5></div>
+      <div class="card-body">
+        <form [formGroup]="operationFormGroup" (ngSubmit)="handleAccountOperation()">
+
+          <div class="mb-2">
+            <label class="form-label">Type d'opération</label>
+            <div>
+              <label class="me-3">
+                <input type="radio" formControlName="operationType" value="DEBIT"> Débit
+              </label>
+              <label class="me-3">
+                <input type="radio" formControlName="operationType" value="CREDIT"> Crédit
+              </label>
+              <label>
+                <input type="radio" formControlName="operationType" value="TRANSFER"> Virement
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-2" *ngIf="operationFormGroup.value.operationType === 'TRANSFER'">
+            <label class="form-label">Compte destinataire</label>
+            <input type="text" formControlName="accountDestination" class="form-control">
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Montant</label>
+            <input type="number" formControlName="amount" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" formControlName="description" class="form-control">
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Valider l'opération</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

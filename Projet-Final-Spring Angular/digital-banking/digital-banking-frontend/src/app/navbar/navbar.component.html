@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/customers">Digital Banking</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+
+      <!-- Liens visibles uniquement si connecté -->
+      <ul class="navbar-nav me-auto" *ngIf="authService.isAuthenticated">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/customers" routerLinkActive="active">Clients</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/accounts" routerLinkActive="active">Comptes</a>
+        </li>
+        <!-- Réservé aux administrateurs -->
+        <li class="nav-item" *ngIf="authService.hasRole('SCOPE_ADMIN')">
+          <a class="nav-link" routerLink="/new-customer" routerLinkActive="active">Nouveau client</a>
+        </li>
+      </ul>
+
+      <!-- Zone de droite : utilisateur / déconnexion -->
+      <ul class="navbar-nav ms-auto">
+        <ng-container *ngIf="authService.isAuthenticated; else notConnected">
+          <li class="nav-item">
+            <span class="navbar-text me-3">
+              Connecté : <strong>{{ authService.username }}</strong>
+            </span>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-light btn-sm" (click)="handleLogout()">Déconnexion</button>
+          </li>
+        </ng-container>
+        <ng-template #notConnected>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Connexion</a>
+          </li>
+        </ng-template>
+      </ul>
+
+    </div>
+  </div>
+</nav>

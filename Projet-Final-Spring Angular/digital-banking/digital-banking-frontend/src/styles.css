@@ -1,0 +1,4 @@
+/* Styles globaux. Bootstrap est importé via angular.json. */
+body {
+  background-color: #f5f6fa;
+}

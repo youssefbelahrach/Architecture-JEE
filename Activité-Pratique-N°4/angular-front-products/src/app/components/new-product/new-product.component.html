@@ -1,0 +1,51 @@
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        <i class="bi bi-plus-circle me-1"></i> New Product
+      </div>
+      <div class="card-body">
+        @if (errorMessage) { <div class="alert alert-danger">{{ errorMessage }}</div> }
+
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name"
+                   [class.is-invalid]="submitted && f.name.invalid">
+            @if (submitted && f.name.errors) {
+              <div class="invalid-feedback">Name is required (3 to 60 characters).</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Price</label>
+            <input type="number" step="0.01" class="form-control" formControlName="price"
+                   [class.is-invalid]="submitted && f.price.invalid">
+            @if (submitted && f.price.errors) {
+              <div class="invalid-feedback">Price must be a positive number.</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-control" formControlName="quantity"
+                   [class.is-invalid]="submitted && f.quantity.invalid">
+            @if (submitted && f.quantity.errors) {
+              <div class="invalid-feedback">Quantity must be a positive number.</div>
+            }
+          </div>
+
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="selected" formControlName="selected">
+            <label class="form-check-label" for="selected">Selected</label>
+          </div>
+
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-save me-1"></i> Save
+          </button>
+          <a routerLink="/products" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

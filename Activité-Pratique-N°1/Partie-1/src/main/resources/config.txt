@@ -1,0 +1,4 @@
+# Classe DAO
+ma.enset.iocdi.dao.DaoImpl
+# Classe métier
+ma.enset.iocdi.metier.MetierImpl

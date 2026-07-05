@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="xmlDao" class="ma.enset.miniioc.demo.xmlcomponents.XmlDao"/>
+
+    <!-- Injection par constructeur -->
+    <bean id="xmlConstructorService" class="ma.enset.miniioc.demo.xmlcomponents.XmlConstructorService">
+        <constructor-arg ref="xmlDao"/>
+    </bean>
+
+    <!-- Injection par setter -->
+    <bean id="xmlSetterService" class="ma.enset.miniioc.demo.xmlcomponents.XmlSetterService">
+        <property name="dataProvider" ref="xmlDao"/>
+    </bean>
+
+    <!-- Injection directe par attribut -->
+    <bean id="xmlFieldService" class="ma.enset.miniioc.demo.xmlcomponents.XmlFieldService">
+        <field name="dataProvider" ref="xmlDao"/>
+    </bean>
+</beans>
